@@ -1,18 +1,20 @@
 import React , {Component} from 'react';
 import { StyleSheet,Button, Text, View, BackHandler } from 'react-native';
 import {
-  createSwitchNavigator,
+  createStackNavigator,
   createAppContainer,
+  StackActions,
 } from 'react-navigation';
 
 
 export default class App extends React.Component {
   render() {
-    return <AppContainer/>;
+    return <Appcontainer/>;
   }
-
+  
 }
 class First extends Component {
+  
   render() {
     return (
       <View style={styles.container}>
@@ -26,7 +28,10 @@ class First extends Component {
 }
 
 class Second extends Component {
-
+  
+  
+  
+  
   render() {
     return (
       <View style={styles.container}>
@@ -37,53 +42,62 @@ class Second extends Component {
     );
   }
 }
+
+
+
+
+
 class Third extends Component {
-  constructor(props) {
-    super(props)
-    //Binding function with this
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-  }
-  componentWillMount() {
-    // Addding event listener for back button press
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-
-  handleBackButtonClick() {
-    //FUnction defined to handle the button click event
-    this.props.navigation.navigate('S1');
-
-    //True because we are telling we handled the backpress
-    return true; // if we give false it will go to home
-  }
-  render() {
-    return (
-      <View style={styles.container}>
-      <Text> Screen 3 </Text>
-      <Text> Press Back to go to Screen 1 </Text>
-      </View>
+  componentWillUnmount(){
+    this.props.navigation.dispatch(
+      StackActions.pop(
+        {
+          n: 1 }
+        ));
+      }
+      
+      render() {
+        return (
+          <View style={styles.container}>
+          <Text> Screen 3 </Text>
+          <Text> Press Back to
+          Go to Screen 1
+          </Text>
+          </View>
+          
+        );
+      }
+      
+    }
+    const popAction = StackActions.pop({
+      n: 1,
+    });
+    
+    
+    
+    const stackNavigator = createStackNavigator(
+      {
+        S1: First,
+        S2: Second,
+        S3: Third,
+      },
+      {
+        // headerTransitionPreset: 'uikit',
+        // mode: 'modal',
+      }
     );
-  }
-}
-
-
-//Creating a switch Navigator
-
-const switchNavigator = createSwitchNavigator({
-  S1: {screen:First},
-  S2: {screen:Second},
-  S3:{screen:Third}
-})
-
-//Holder for switch Navigator
-const AppContainer=createAppContainer(switchNavigator);
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    //Holder for switch Navigator
+    
+    const Appcontainer = createAppContainer(stackNavigator);
+    
+    
+    
+    
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    });
